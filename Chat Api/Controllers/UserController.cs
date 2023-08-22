@@ -10,6 +10,8 @@ using System;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Chat_Api.Controllers
 {
@@ -18,11 +20,15 @@ namespace Chat_Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _authContext;
-        public UserController(AppDbContext appDbContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserController(AppDbContext appDbContext, IHttpContextAccessor httpContextAccessor)
         {
             _authContext = appDbContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        //User Login
 
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] User userObj)
@@ -61,6 +67,9 @@ namespace Chat_Api.Controllers
                     Profile = userResponse
                 });
         }
+
+        //User Registration
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] User userObj)
         {
@@ -103,7 +112,8 @@ namespace Chat_Api.Controllers
             var key = Encoding.ASCII.GetBytes("This is my 128 bits very long secret key.......");
             var identity = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, $"{user.Name}")
+                new Claim(ClaimTypes.Name, $"{user.Name}"),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             });
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
@@ -117,13 +127,92 @@ namespace Chat_Api.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
+        //Retrieve UserList
 
-
-        [HttpGet]
-        public async Task <ActionResult<User>> GetAllUsers()
+        private Models.User GetCurrentLoggedInUser()
         {
-            return Ok(await _authContext.Users.ToListAsync());
+            var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                var currentUser = _authContext.Users.FirstOrDefault(u => u.Id == userId);
+                return currentUser;
+            }
+            return null;
         }
+
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<Models.User>> GetAllUsers()
+        {
+            var currentUser = GetCurrentLoggedInUser();
+            if (currentUser == null)
+            {
+                return BadRequest(new { Message = "Unable to retrieve current user." });
+            }
+            var userList = await _authContext.Users
+        .Where(u => u.Id != currentUser.Id)
+        .Select(u => new
+        {
+            id = u.Id,
+            name = u.Name,
+            email = u.Email,
+        })
+        .ToListAsync();
+            return Ok(new { users = userList });
+        }
+
+
+
+
+
+        //[HttpGet]
+        //[Authorize]
+        //public IActionResult GetAllUsers()
+        //{
+        //    string authenticatedUserEmail = User.Identity.Name;
+
+        //    var users = _authContext.Users
+        //        .Where(u => u.Email != authenticatedUserEmail)
+        //        .Select(u => new
+        //        {
+        //            u.Id,
+        //            u.Name,
+        //            u.Email
+        //        })
+        //        .ToList();
+
+        //    return Ok(new { users });
+        //}
+
+
+
+
+
+        //public async Task<ActionResult<User>> GetAllUsers()
+        //{
+        //    // Get the current user
+        //    var authenticatedUserEmail = HttpContext.User;
+
+        //    // Access user properties
+        //    var userId = authenticatedUserEmail.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    var userName = authenticatedUserEmail.FindFirst(ClaimTypes.Name)?.Value;
+        //    var userEmail = authenticatedUserEmail.FindFirst(ClaimTypes.Email)?.Value;
+        //    await Console.Out.WriteLineAsync(userId);
+
+        //    var users = await _authContext.Users
+        //        .Where(u => u.Id != Convert.ToInt32(userId))
+        //        .Select(u => new 
+        //        {
+        //            UserId = u.Id,
+        //            Name = u.Name,
+        //            Email = u.Email
+        //        })
+        //        .ToListAsync();
+
+        //    return Ok(users);
+        //}
+
 
 
     }

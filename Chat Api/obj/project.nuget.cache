@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Ws9B1s+qXLfjwAy1GlytAY1hQ7n0RlXbEFZtk9RMld+dnAZxFEu/QuJPCo9IVAXMr8iTI7wOecTL+DqcVAzI4g==",
+  "dgSpecHash": "UDLDWr3+1x4c6K3UJpiKXJCbppK6gYke58F/EEQWm0X7INPn7cv7wImNLi1BQoDVpHI7FKGKYXfUUHC20jp5aQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\admin\\OneDrive\\Desktop\\Promact Internship\\Minimal Chat Application\\Backend\\Chat Api\\Chat Api\\Chat Api.csproj",
   "expectedPackageFiles": [
@@ -46,7 +46,10 @@
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\scrutor\\3.3.0\\scrutor.3.3.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore.filters\\7.0.8\\swashbuckle.aspnetcore.filters.7.0.8.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore.filters.abstractions\\7.0.8\\swashbuckle.aspnetcore.filters.abstractions.7.0.8.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",

@@ -152,3 +152,6 @@ C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Back
 C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\obj\Debug\net7.0\Chat Api.pdb
 C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\obj\Debug\net7.0\Chat Api.genruntimeconfig.cache
 C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\obj\Debug\net7.0\ref\Chat Api.dll
+C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\bin\Debug\net7.0\Scrutor.dll
+C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\admin\OneDrive\Desktop\Promact Internship\Minimal Chat Application\Backend\Chat Api\Chat Api\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

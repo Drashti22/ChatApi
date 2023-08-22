@@ -12,6 +12,7 @@ namespace Chat_Api.Context
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
