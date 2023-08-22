@@ -3960,11 +3960,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\OneDrive\\Desktop\\BharatLaw\\Backend\\Chat Api\\Chat Api\\Chat Api.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\OneDrive\\Desktop\\Promact Internship\\Minimal Chat Application\\Backend\\Chat Api\\Chat Api\\Chat Api.csproj",
       "projectName": "Chat Api",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\BharatLaw\\Backend\\Chat Api\\Chat Api\\Chat Api.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\Promact Internship\\Minimal Chat Application\\Backend\\Chat Api\\Chat Api\\Chat Api.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\OneDrive\\Desktop\\BharatLaw\\Backend\\Chat Api\\Chat Api\\obj\\",
+      "outputPath": "C:\\Users\\admin\\OneDrive\\Desktop\\Promact Internship\\Minimal Chat Application\\Backend\\Chat Api\\Chat Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
