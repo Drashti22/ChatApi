@@ -1,4 +1,5 @@
-﻿using Chat_Api.Context;
+﻿using Azure.Core;
+using Chat_Api.Context;
 using Chat_Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,7 @@ namespace Chat_Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendMessage([FromBody] SendMessageRequest request)
+        public async Task <IActionResult> SendMessage([FromBody] SendMessageRequest request)
         {
             // Get the authenticated user's ID from the claims
 
@@ -49,7 +50,7 @@ namespace Chat_Api.Controllers
             };
 
             _context.Messages.Add(message);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // Return the created message details in the response
             var response = new SendMessageResponse
@@ -63,12 +64,26 @@ namespace Chat_Api.Controllers
             return Ok(response);
 
         }
+        public class SendMessageRequest
+        {
+            public int ReceiverId { get; set; }
+            public string Content { get; set; }
+        }
+
+        public class SendMessageResponse
+        {
+            public int MessageId { get; set; }
+            public int SenderId { get; set; }
+            public int ReceiverId { get; set; }
+            public string Content { get; set; }
+            public DateTime Timestamp { get; set; }
+        }
 
 
         //edit message
         [HttpPut]
         [Route("api/messages/{messageId}")]
-        public IActionResult EditMessage(int messageId, [FromBody] EditMessageRequest request)
+        public async Task <IActionResult> EditMessage(int messageId, [FromBody] EditMessageRequest request)
         {
             var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -90,7 +105,7 @@ namespace Chat_Api.Controllers
             }
 
             message.Content = request.Content;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok("Message edited successfully");
         }
@@ -99,10 +114,12 @@ namespace Chat_Api.Controllers
         {
             public string Content { get; set; }
         }
+
+
         //delete message
         [HttpDelete]
         [Route("api/messages/{messageId}")]
-        public IActionResult DeleteMessage(int messageId)
+        public async Task <IActionResult> DeleteMessage(int messageId)
         {
             var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -119,25 +136,55 @@ namespace Chat_Api.Controllers
             }
 
             _context.Messages.Remove(message);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok("Message deleted successfully");
         }
 
-    }
 
-    public class SendMessageRequest
+        // Retrieve Conversation History
+
+        [HttpGet("history")]
+        public IActionResult GetConversationHistory(int userId, DateTime? before = null, int count = 20, string sort = "asc") 
         {
-            public int ReceiverId { get; set; }
-            public string Content { get; set; }
+            var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+           
+            var messageQuery = _context.Messages
+               .Where(m => (m.SenderId == Convert.ToInt32(authenticatedUserId)) && m.ReceiverId == userId ||
+                               (m.SenderId == userId && m.ReceiverId == Convert.ToInt32(authenticatedUserId)))
+                .OrderBy(m => sort == "asc" ? m.Timestamp : default(DateTime?))
+                .ThenByDescending(m => sort == "desc" ? m.Timestamp : default(DateTime?))
+                .Take(count);
+
+
+            var userIdExists = _context.Users.Any(r => r.Id == userId);
+
+            if (!userIdExists)
+            {
+                return NotFound("User doesnot exist.");
+            }
+
+
+            var messages = messageQuery.Select(m => new
+            {
+                id = m.Id,
+                senderId = m.SenderId,
+                receiverId = m.ReceiverId,
+                content     = m.Content,
+                timestamp = m.Timestamp,
+            }).ToList();
+
+            if (messages.Count == 0)
+            {
+                return NotFound("Conversation is not found");
+            }
+
+
+            return Ok(new { messages });
         }
 
-        public class SendMessageResponse
-        {
-            public int MessageId { get; set; }
-            public int SenderId { get; set; }
-            public int ReceiverId { get; set; }
-            public string Content { get; set; }
-            public DateTime Timestamp { get; set; }
-        }
     }
+
+
+}

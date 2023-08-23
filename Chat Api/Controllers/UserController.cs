@@ -129,7 +129,7 @@ namespace Chat_Api.Controllers
 
         //Retrieve UserList
 
-        private Models.User GetCurrentLoggedInUser()
+        private User GetCurrentLoggedInUser()
         {
             var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
