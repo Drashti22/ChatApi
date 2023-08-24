@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Chat_Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -30,8 +30,8 @@ namespace Chat_Api.Controllers
 
         //User Login
 
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] User userObj)
+        [HttpPost("login")]
+        public async Task<IActionResult> Authenticate([FromBody] UserDto userObj)
         {
             if(userObj == null)
             
@@ -142,7 +142,7 @@ namespace Chat_Api.Controllers
 
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("users")]
         public async Task<ActionResult<Models.User>> GetAllUsers()
         {
             var currentUser = GetCurrentLoggedInUser();
@@ -166,52 +166,7 @@ namespace Chat_Api.Controllers
 
 
 
-        //[HttpGet]
-        //[Authorize]
-        //public IActionResult GetAllUsers()
-        //{
-        //    string authenticatedUserEmail = User.Identity.Name;
-
-        //    var users = _authContext.Users
-        //        .Where(u => u.Email != authenticatedUserEmail)
-        //        .Select(u => new
-        //        {
-        //            u.Id,
-        //            u.Name,
-        //            u.Email
-        //        })
-        //        .ToList();
-
-        //    return Ok(new { users });
-        //}
-
-
-
-
-
-        //public async Task<ActionResult<User>> GetAllUsers()
-        //{
-        //    // Get the current user
-        //    var authenticatedUserEmail = HttpContext.User;
-
-        //    // Access user properties
-        //    var userId = authenticatedUserEmail.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //    var userName = authenticatedUserEmail.FindFirst(ClaimTypes.Name)?.Value;
-        //    var userEmail = authenticatedUserEmail.FindFirst(ClaimTypes.Email)?.Value;
-        //    await Console.Out.WriteLineAsync(userId);
-
-        //    var users = await _authContext.Users
-        //        .Where(u => u.Id != Convert.ToInt32(userId))
-        //        .Select(u => new 
-        //        {
-        //            UserId = u.Id,
-        //            Name = u.Name,
-        //            Email = u.Email
-        //        })
-        //        .ToListAsync();
-
-        //    return Ok(users);
-        //}
+       
 
 
 

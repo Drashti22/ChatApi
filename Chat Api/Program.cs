@@ -1,4 +1,5 @@
 using Chat_Api.Context;
+using Chat_Api.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,8 @@ internal class Program
                     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"));
                 });
 
-                builder.Services.AddAuthentication(x =>
+
+        builder.Services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,7 +67,8 @@ internal class Program
                     app.UseSwagger();
                     app.UseSwaggerUI();
                 }
-              
+
+
 
                 app.UseHttpsRedirection();
 
@@ -74,6 +77,9 @@ internal class Program
                 app.UseAuthorization();
 
                 app.MapControllers();
+
+                app.UseMiddleware<RequestLogginMiddleware>();
+            
 
                 app.Run();
             }

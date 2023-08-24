@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Chat_Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [Authorize]
     public class MessageController : ControllerBase
     {
@@ -20,24 +20,26 @@ namespace Chat_Api.Controllers
             _context = context;
         }
 
-        [HttpPost]
+        [HttpPost("messages")]
         public async Task <IActionResult> SendMessage([FromBody] SendMessageRequest request)
         {
             // Get the authenticated user's ID from the claims
+            var senderId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            if(request == null  || string.IsNullOrWhiteSpace(request.Content))
+            if (request == null || string.IsNullOrWhiteSpace(request.Content))
             {
                 return BadRequest("Message content is required");
             }
 
-            var senderId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var receiverExists = _context.Users.Any(r => r.Id != request.ReceiverId);
+            var receiver = await _context.Users.FindAsync(request.ReceiverId);
 
-            if (receiverExists)
+            if (receiver == null)
             {
                 return NotFound("Receiver not found");
             }
+
+     
 
             //create and save the message
             var message = new Message
@@ -82,7 +84,7 @@ namespace Chat_Api.Controllers
 
         //edit message
         [HttpPut]
-        [Route("api/messages/{messageId}")]
+        [Route("messages/{messageId}")]
         public async Task <IActionResult> EditMessage(int messageId, [FromBody] EditMessageRequest request)
         {
             var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -118,7 +120,7 @@ namespace Chat_Api.Controllers
 
         //delete message
         [HttpDelete]
-        [Route("api/messages/{messageId}")]
+        [Route("messages/{messageId}")]
         public async Task <IActionResult> DeleteMessage(int messageId)
         {
             var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -144,12 +146,12 @@ namespace Chat_Api.Controllers
 
         // Retrieve Conversation History
 
-        [HttpGet("history")]
-        public IActionResult GetConversationHistory(int userId, DateTime? before = null, int count = 20, string sort = "asc") 
+        [HttpGet("messages")]
+        public IActionResult GetConversationHistory(int userId, DateTime? before = null, int count = 20, string sort = "asc")
         {
             var authenticatedUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-           
+
             var messageQuery = _context.Messages
                .Where(m => (m.SenderId == Convert.ToInt32(authenticatedUserId)) && m.ReceiverId == userId ||
                                (m.SenderId == userId && m.ReceiverId == Convert.ToInt32(authenticatedUserId)))
@@ -171,7 +173,7 @@ namespace Chat_Api.Controllers
                 id = m.Id,
                 senderId = m.SenderId,
                 receiverId = m.ReceiverId,
-                content     = m.Content,
+                content = m.Content,
                 timestamp = m.Timestamp,
             }).ToList();
 
@@ -179,9 +181,13 @@ namespace Chat_Api.Controllers
             {
                 return NotFound("Conversation is not found");
             }
-
+            if (sort != "asc" && sort != "dsc")
+            {
+                return BadRequest("Invalid request parametre");
+            }
 
             return Ok(new { messages });
+        
         }
 
     }
