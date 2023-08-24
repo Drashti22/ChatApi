@@ -19,7 +19,8 @@ namespace Chat_Api.Models
 
        public string Token { get; set; }
 
+        public virtual ICollection<Message>? SentMessages { get; set; }
 
-
+        public virtual ICollection<Message>? ReceivedMessages { get; set; }
     }
 }
