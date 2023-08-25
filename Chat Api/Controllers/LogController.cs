@@ -37,7 +37,7 @@ namespace Chat_Api.Controllers
 
         //    if (logs.Count == 0)
         //        return NotFound();
-
+             
         //    return Ok(logs);
 
 
@@ -49,10 +49,10 @@ namespace Chat_Api.Controllers
             DateTime? parsedEndTime = ParseDateTime(endTime);
 
             if (parsedStartTime == null)
-                parsedStartTime = DateTime.UtcNow.AddMinutes(-5);
+                parsedStartTime = DateTime.Now.AddMinutes(-5);
 
             if (parsedEndTime == null)
-                parsedEndTime = DateTime.UtcNow;
+                parsedEndTime = DateTime.Now;
 
             var logs = await _context.logs
                 .Where(log => log.TimeStamp >= parsedStartTime && log.TimeStamp <= parsedEndTime)
