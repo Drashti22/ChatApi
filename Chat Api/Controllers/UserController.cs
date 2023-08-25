@@ -87,13 +87,13 @@ namespace Chat_Api.Controllers
 
 
             userObj.Password = PasswordHasher.HashPassword(userObj.Password);
-            userObj.Token = "";
+           
             await _authContext.Users.AddAsync(userObj);
             await _authContext.SaveChangesAsync();
 
 
 
-            var userResponse = new
+            var userResponse = new 
             {
                 userId = userObj.Id,
                 name = userObj.Name,
