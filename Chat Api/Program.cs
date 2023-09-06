@@ -40,6 +40,16 @@ internal class Program
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"));
                 });
+        //configure Cors
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("SwaggerPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+        });
 
 
         builder.Services.AddAuthentication(x =>
@@ -71,6 +81,8 @@ internal class Program
 
 
                 app.UseHttpsRedirection();
+
+                app.UseCors("SwaggerPolicy");
 
                 app.UseAuthentication();
 

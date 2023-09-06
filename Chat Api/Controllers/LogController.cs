@@ -21,29 +21,9 @@ namespace Chat_Api.Controllers
             _context = context;
         }
 
-        //[HttpGet]
-        //[Authorize]
 
-        //public async Task<IActionResult> GetLogs([FromQuery] DateTime? startTime = null, [FromQuery] DateTime? endTime = null)
-        //{
-        //    if (startTime == null)
-        //        startTime = DateTime.UtcNow.AddMinutes(-5);
-
-        //    if (endTime == null)
-        //        endTime = DateTime.UtcNow;
-
-        //    var logs = await _context.logs.
-        //        Where(log => log.TimeStamp >= startTime && log.TimeStamp <= endTime).ToListAsync();
-
-        //    if (logs.Count == 0)
-        //        return NotFound();
-             
-        //    return Ok(logs);
-
-
-        //}
         [HttpGet("log")]
-        public async Task<IActionResult> GetLogs([FromQuery] string startTime = null, [FromQuery] string endTime = null)
+        public async Task<IActionResult> GetLogs([FromQuery]string timeframe, [FromQuery] string startTime = null, [FromQuery] string endTime = null)
         {
             DateTime? parsedStartTime = ParseDateTime(startTime);
             DateTime? parsedEndTime = ParseDateTime(endTime);
@@ -54,6 +34,25 @@ namespace Chat_Api.Controllers
             if (parsedEndTime == null)
                 parsedEndTime = DateTime.Now;
 
+            switch (timeframe)
+            {
+                //case "Last 5 mins":
+                //    parsedStartTime = DateTime.Now.AddMinutes(-5);
+                //    break;
+                //case "Last 10 mins":
+                //    parsedStartTime = DateTime.Now.AddMinutes(-10);
+                //    break;
+                //case "Last 30 mins":
+                //    parsedStartTime = DateTime.Now.AddMinutes(-30);
+                //    break;
+                //case "custom":
+                //    parsedStartTime = parsedStartTime ?? DateTime.Now.AddMinutes(-30);
+                //    parsedEndTime = parsedEndTime ?? DateTime.Now;
+
+                //    break;
+                default:
+                    break;
+            }
             var logs = await _context.logs
                 .Where(log => log.TimeStamp >= parsedStartTime && log.TimeStamp <= parsedEndTime)
                 .ToListAsync();
@@ -75,7 +74,5 @@ namespace Chat_Api.Controllers
             return null;
         }
     }
-
-
 }
 
