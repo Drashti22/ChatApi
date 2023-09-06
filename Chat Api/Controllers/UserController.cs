@@ -62,7 +62,7 @@ namespace Chat_Api.Controllers
             };
             return Ok(new
                 {
-                    Token= "",
+                    Token= user.Token,
                     Message = "Login Success!",
                     Profile = userResponse
                 });
